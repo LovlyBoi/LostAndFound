@@ -25,7 +25,7 @@
     <div v-if="currentRef === 3" class="overflow-auto" style="max-height: calc(100vh - 200px);">
       <Preview :modelRef="modelRef" :type="type" />
     </div>
-    <NButtonGroup class="absolute bottom-6 mr-20" style="left:45%">
+    <NSpace class="absolute bottom-6 mr-20" style="left:43%">
       <NButton @click="prev" :disabled="currentRef === 1">
         上一步
       </NButton>
@@ -33,15 +33,15 @@
         下一步
       </NButton>
       <NButton @click="submit" v-if="currentRef === 3">
-        提交
+        提 交
       </NButton>
-    </NButtonGroup>
+    </NSpace>
   </div>
 
 </template>
 
 <script setup lang="ts">
-import { NButton, NButtonGroup, NRadioButton, NRadioGroup, NStep, NSteps, StepsProps, useMessage } from 'naive-ui';
+import { NButton, NRadioButton, NRadioGroup, NSpace, NStep, NSteps, StepsProps, useMessage } from 'naive-ui';
 import { ref } from 'vue'
 import SeekIcon from '@/pages/publishLost/icons/SeekIcon.vue'
 import FoundIcon from '@/pages/publishLost/icons/FoundIcon.vue'
