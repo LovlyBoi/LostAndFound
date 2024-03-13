@@ -1,0 +1,19 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.slide-down-enter-from, .slide-down-leave-to {
+  max-height: 0;
+}
+
+.slide-down-enter-active {
+  transition: all 200ms ease-out;
+}
+
+.slide-down-leave-active {
+  transition: all 200ms ease-in;
+}
+
+.slide-down-leave-from, .slide-down-enter-to {
+  max-height: 36px;
+}
