@@ -1,5 +1,5 @@
 <template>
-    <NForm class="w-full max-w-lg space-y-8" ref="props.formRef" :rules="rules" :model="modelRef" label-placement="left"
+    <NForm class="w-full max-w-lg space-y-8" ref="formRef" :rules="rules" :model="modelRef" label-placement="left"
         label-width="auto" require-mark-placement="right-hanging">
         <div>
             <NFormItem path="title" label="标题">
@@ -28,14 +28,12 @@
 </template>
 
 <script setup lang="ts">
-import { FormInst, FormItemRule, NForm, NFormItem, NImage, NInput, NModal, NRadioButton, NRadioGroup, NStep, NSteps, NUpload, StepsProps, UploadFileInfo, useMessage } from 'naive-ui';
-import { ref, watch } from 'vue'
+import { FormInst, FormItemRule, NForm, NFormItem, NInput, NModal, NUpload, UploadFileInfo } from 'naive-ui';
+import { ref } from 'vue'
 import { ModelType } from '../type'
 
 const props = defineProps<{
     modelRef: ModelType,
-    formRef: any,
-    handleModelChange:(model: ModelType) => void
 }>()
 
 
@@ -43,7 +41,7 @@ const modelRef = ref(props.modelRef)
 
 const previewImageUrlRef = ref('')
 const showModalRef = ref(false)
-const formRef = ref<FormInst | null>(props.formRef)
+const formRef = ref<FormInst | null>()
 
 const rules = {
     title: {
@@ -76,10 +74,6 @@ const rules = {
     }
 }
 
-watch(modelRef.value, (newVal) => {
-    props.handleModelChange(newVal)
-})
-
 function handlePreview(file: UploadFileInfo) {
     const { url } = file
     previewImageUrlRef.value = url as string
@@ -109,6 +103,11 @@ function fileToBase64(file: any) {
         };
     });
 }
+
+defineExpose({
+    formRef,
+    modelRef,
+})
 
 </script>
 
