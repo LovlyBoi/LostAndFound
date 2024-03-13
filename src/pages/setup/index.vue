@@ -114,7 +114,7 @@ const handleRegister = async () => {
   if (!result) return
   try {
     await userStore.register(username.value, password.value)
-    router.push('/blogs/all-blogs')
+    router.push('/')
   } catch (error: any) {
     console.error(error)
     if (error === '该用户名已被占用') {
