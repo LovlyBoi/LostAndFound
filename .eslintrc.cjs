@@ -20,7 +20,7 @@ module.exports = {
   },
   plugins: ['vue', '@typescript-eslint'],
   rules: {
-    'linebreak-style': ['error', 'unix'],
+    'linebreak-style': off,
     quotes: ['error', 'single'],
     semi: ['error', 'never'],
     'vue/multi-word-component-names': ['off'],
