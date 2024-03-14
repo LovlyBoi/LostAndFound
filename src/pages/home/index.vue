@@ -43,7 +43,7 @@ import { SparklesOutline, ArrowDownOutline } from '@vicons/ionicons5'
 import FoundCard from './components/FoundCard.vue'
 import LostCard from './components/LostCard.vue'
 import { getLostAndFoundMessages } from './data'
-import { BaseMessageDTO } from './type'
+import { BaseMessageDTO } from '@/type'
 
 const isLoading = ref(true)
 
