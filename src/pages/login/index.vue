@@ -5,10 +5,7 @@
     >
       <div class="w-full max-w-md space-y-8">
         <div>
-          <img
-            class="w-auto h-12 mx-auto"
-            :src="tailwindSvg"
-          />
+          <img class="w-auto h-12 mx-auto" :src="tailwindSvg" />
           <h2
             class="mt-6 text-3xl font-bold tracking-tight text-center text-gray-900"
           >
@@ -51,22 +48,34 @@
                   name="password"
                   type="password"
                   autocomplete="current-password"
-                  class="relative block w-full rounded-b-md border-0 p-1.5 text-gray-900 ring-1 ring-inset placeholder:text-gray-400 focus:z-10 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 outline-none"
+                  class="relative block w-full border-0 p-1.5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:z-10 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 outline-none"
                   placeholder="密码"
                 >
                 </ValidateInput>
               </div>
+              <div>
+                <label for="password-again" class="sr-only">Password</label>
+                <ValidateInput
+                  v-model.trim="verifyCode"
+                  :rule="verifyCodeRule"
+                  trigger="blur"
+                  animate-on-invalid
+                  normal-class="ring-gray-300"
+                  error-class="z-10 ring-red-600 focus:ring-red-600 ring-2"
+                  class="relative block w-full rounded-b-md border-0 p-1.5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:z-10 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 outline-none"
+                  placeholder="验证码"
+                />
+              </div>
             </div>
 
-            <!-- <div class="flex flex-row-reverse items-center justify-between">
-              <div class="text-sm">
-                <a
-                  href="javascript:;"
-                  class="font-medium text-indigo-600 hover:text-indigo-500"
-                  >忘记密码？</a
-                >
+            <div class="flex flex-row-reverse items-center justify-between">
+              <div
+                class="text-sm bg-slate-100 w-[160px] h-[50px] overflow-hidden rounded cursor-pointer"
+                @click="getVerifyImg"
+              >
+                <img class="object-fill" :src="verifyImg" />
               </div>
-            </div> -->
+            </div>
 
             <div>
               <button
@@ -93,12 +102,16 @@ import ValidateProvider from '@/components/Validater/ValidateProvider.vue'
 import { useUserStore } from '@/store/userStore'
 import tailwindSvg from '@/assets/tailwind.svg'
 
+const verifyImg = ref('')
+
 const router = useRouter()
 
 const userStore = useUserStore()
 
 const username = ref('')
 const password = ref('')
+const verifyCode = ref('')
+const verifyCodeId = ref('')
 
 const validateRef = ref<InstanceType<typeof ValidateProvider>>()
 
@@ -109,7 +122,7 @@ const handleLogin = async () => {
   const result = await validateRef.value?.validateAll()
   if (!result) return
   try {
-    await userStore.login(username.value, password.value)
+    await userStore.login(username.value, password.value, verifyCode.value, verifyCodeId.value )
     router.push('/')
   } catch (error: any) {
     console.error(error)
@@ -145,5 +158,19 @@ const passwordRule = (value: string) => {
     }
   if (value.length < 6) return { isValid: false, msg: '密码长度不能小于6' }
   return { isValid: true }
+}
+
+const verifyCodeRule = (value: string) => {
+  if (value === '') {
+    return {
+      isValid: false,
+      msg: '验证码字段是必须的',
+    }
+  }
+  return { isValid: true }
+}
+
+function getVerifyImg() {
+  console.log('getVerifyImg')
 }
 </script>

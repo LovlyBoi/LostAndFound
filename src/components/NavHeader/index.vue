@@ -10,36 +10,50 @@
         </h2>
       </RouterLink>
       <div
-        class="flex items-center justify-center group transition-all"
+        class="flex items-center justify-center transition-all"
         :class="[isFocused ? 'w-[240px]' : 'w-[88px]']"
       >
-      <div v-if="!isLogin" class="flex">
-        <RouterLink to="/login" class="w-12 underline px-2 tracking-wide">登录</RouterLink>
-        <RouterLink to="/setup" class="w-12 underline px-2 tracking-wide">注册</RouterLink>
-      </div>
-        <NInput
-          v-if="isHome"
-          ref="inputRef"
-          round
-          placeholder="搜索"
-          v-model:value="sreachInfo"
-          :input-props="{
-            class: 'whitespace-nowrap text-ellipsis overflow-hidden',
-          }"
-          @focus="isFocused = true"
-          @blur="isFocused = false"
-          @keydown.enter="handleSearch"
-        >
-          <template #prefix>
-            <NIcon
-              size="24"
-              class="text-slate-500 group-hover:text-slate-700 cursor-pointer"
-              @click="handleSearch"
-            >
-              <SearchOutline />
-            </NIcon>
-          </template>
-        </NInput>
+        <div v-if="!isLogin" class="flex">
+          <RouterLink to="/login" class="w-12 underline px-2 tracking-wide">
+            登录
+          </RouterLink>
+          <RouterLink to="/setup" class="w-12 underline px-2 tracking-wide">
+            注册
+          </RouterLink>
+        </div>
+        <div v-if="isLogin && $route.fullPath !== '/publishLost'">
+          <RouterLink
+            to="/publishLost"
+            class="w-24 underline px-2 tracking-wide block"
+          >
+            发布信息
+          </RouterLink>
+        </div>
+        <div class="group">
+          <NInput
+            v-if="isHome"
+            ref="inputRef"
+            round
+            placeholder="搜索"
+            v-model:value="sreachInfo"
+            :input-props="{
+              class: 'whitespace-nowrap text-ellipsis overflow-hidden',
+            }"
+            @focus="isFocused = true"
+            @blur="isFocused = false"
+            @keydown.enter="handleSearch"
+          >
+            <template #prefix>
+              <NIcon
+                size="24"
+                class="text-slate-500 group-hover:text-slate-700 cursor-pointer"
+                @click="handleSearch"
+              >
+                <SearchOutline />
+              </NIcon>
+            </template>
+          </NInput>
+        </div>
       </div>
     </div>
   </header>
