@@ -96,6 +96,7 @@ const next = () => {
     } else currentRef.value++
   }
   if (currentRef.value === 2) {
+    console.log(modelRef.value, '++')
     basicInfoRef.value?.formRef?.validate((errors: any) => {
       if (!errors && currentRef.value) {
         currentRef.value++

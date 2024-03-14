@@ -32,9 +32,8 @@
       </NFormItem>
       <NFormItem path="fileList" label="上传图片">
         <NUpload
-          action="/"
           :max="3"
-          @change="handleUploadChange"
+          @change="handleUploadFinish"
           @preview="handlePreview"
           :default-file-list="modelRef.fileList"
           list-type="image-card"
@@ -44,10 +43,10 @@
         <NModal
           v-model:show="showModalRef"
           preset="card"
-          style="width: 600px"
+          class="w-[600px]"
           title="一张很酷的图片"
         >
-          <img :src="previewImageUrlRef" style="width: 100%" />
+          <img :src="previewImageUrlRef" class="w-full" />
         </NModal>
       </NFormItem>
       <NFormItem path="content" label="描述">
@@ -121,21 +120,22 @@ function handlePreview(file: UploadFileInfo) {
   previewImageUrlRef.value = url as string
   showModalRef.value = true
 }
-const handleUploadChange = async (data: { fileList: UploadFileInfo[] }) => {
-  modelRef.value.photos = []
-  modelRef.value.fileList = data?.fileList
-  const arr: any = []
-  data.fileList.forEach(async (item) => {
-    const res = await fileToBase64(item?.file)
-    arr.push(res)
+
+function handleUploadFinish(data: { file: UploadFileInfo }) {
+  console.log('change', data)
+  if (!data.file) return
+  modelRef.value.fileList.push(data.file)
+  fileToBase64(data.file).then((base64) => {
+    modelRef.value.photos.push(base64 || '')
   })
-  modelRef.value.photos = arr
+  return data.file
 }
 
-function fileToBase64(file: any) {
+function fileToBase64(file: UploadFileInfo): Promise<string | undefined> {
   return new Promise((resolve, reject) => {
+    if (!file.file) return resolve(undefined)
     const reader = new FileReader()
-    reader.readAsDataURL(file)
+    reader.readAsDataURL(new Blob([file.file]))
     reader.onload = function () {
       const base64String = reader?.result?.toString()
       resolve(base64String)
