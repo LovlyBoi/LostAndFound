@@ -1,11 +1,6 @@
 <template>
   <div class="max-w-[1140px] mx-auto mb-[30px]">
-    <div class="w-full text-red-500 h-[30px] leading-[30px] my-4">
-      <NIcon size="16">
-        <SparklesOutline />
-      </NIcon>
-      公告：{{ '12312313' }}
-    </div>
+    <Announcement :announcements></Announcement>
     <NGrid :cols="3" :x-gap="12" :y-gap="12" class="mt-4">
       <NGi v-for="(message, index) in messages" :key="message.id">
         <FoundCard v-if="index % 2 === 1" :message></FoundCard>
@@ -39,9 +34,12 @@
 <script lang="ts" setup>
 import { ref } from 'vue'
 import { NGrid, NGi, NIcon, NButton, NDivider } from 'naive-ui'
-import { SparklesOutline, ArrowDownOutline } from '@vicons/ionicons5'
+import { ArrowDownOutline } from '@vicons/ionicons5'
 import FoundCard from './components/FoundCard.vue'
 import LostCard from './components/LostCard.vue'
+import Announcement, {
+  type Announcement as TAnnouncement,
+} from '@/components/Announcement/index.vue'
 import { getLostAndFoundMessages } from './data'
 import { BaseMessageDTO } from '@/type'
 
@@ -50,6 +48,21 @@ const isLoading = ref(true)
 const hasMore = ref(false)
 
 const messages = ref<BaseMessageDTO[]>([])
+
+const announcements = ref<TAnnouncement[]>([
+  {
+    title: '失物招领',
+    content: '在这里你可以发布失物招领信息',
+  },
+  {
+    title: '寻物启事',
+    content: '在这里你可以发布寻物启事信息',
+  },
+  {
+    title: '关于我们',
+    content: '在这里你可以了解我们',
+  },
+])
 
 getLostAndFoundMessages()
   .then((res) => {

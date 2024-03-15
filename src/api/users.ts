@@ -19,7 +19,12 @@ export async function login(
   const res = await request<{ token: string }>({
     url: '/api/sys/login',
     method: 'POST',
-    data: { username, password, verifyCode, verifyCodeId },
+    data: {
+      username,
+      password,
+      code: verifyCode,
+      uuid: verifyCodeId,
+    },
   })
   return {
     ...res,
@@ -27,12 +32,16 @@ export async function login(
   }
 }
 
-export function register(username: string, password: string) {
-  return request<LoginResponse>({
+export async function register(username: string, password: string) {
+  const res = await request<LoginResponse>({
     url: '/sys/user/saveNormal',
     method: 'POST',
-    data: { username, password },
+    data: { loginName: username, password },
   })
+  return {
+    ...res,
+    username,
+  }
 }
 
 export function getVerfiyCode() {

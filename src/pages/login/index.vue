@@ -73,7 +73,7 @@
                 class="text-sm bg-slate-100 w-[160px] h-[50px] overflow-hidden rounded cursor-pointer"
                 @click="getVerifyImg"
               >
-                <img class="object-fill" :src="verifyImg" />
+                <img class="object-fill w-full" :src="verifyImg" />
               </div>
             </div>
 
@@ -101,6 +101,7 @@ import ValidateInput, {
 import ValidateProvider from '@/components/Validater/ValidateProvider.vue'
 import { useUserStore } from '@/store/userStore'
 import tailwindSvg from '@/assets/tailwind.svg'
+import { getVerfiyCode } from '@/api'
 
 const verifyImg = ref('')
 
@@ -122,7 +123,12 @@ const handleLogin = async () => {
   const result = await validateRef.value?.validateAll()
   if (!result) return
   try {
-    await userStore.login(username.value, password.value, verifyCode.value, verifyCodeId.value )
+    await userStore.login(
+      username.value,
+      password.value,
+      verifyCode.value,
+      verifyCodeId.value,
+    )
     router.push('/')
   } catch (error: any) {
     console.error(error)
@@ -170,7 +176,11 @@ const verifyCodeRule = (value: string) => {
   return { isValid: true }
 }
 
-function getVerifyImg() {
-  console.log('getVerifyImg')
+async function getVerifyImg() {
+  const res = await getVerfiyCode()
+  verifyImg.value = 'data:image/jpeg;base64,' + res.codeImg
+  verifyCodeId.value = res.uuid
 }
+
+getVerifyImg()
 </script>

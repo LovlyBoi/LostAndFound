@@ -1,23 +1,21 @@
 <template>
   <div class="relative h-screen">
     <NDialogProvider>
-      <NMessageProvider>
-        <NLayout position="absolute">
-          <NLayoutHeader position="absolute">
-            <NavHeader></NavHeader>
-          </NLayoutHeader>
-          <NLayoutContent position="absolute" style="top: 44px" has-sider>
-            <NLayoutContent>
-              <RouterView v-slot="{ Component }">
-                <keep-alive>
-                  <component v-if="$route.meta.keepAlive" :is="Component" />
-                </keep-alive>
-                <component v-if="!$route.meta.keepAlive" :is="Component" />
-              </RouterView>
-            </NLayoutContent>
+      <NLayout position="absolute">
+        <NLayoutHeader position="absolute">
+          <NavHeader></NavHeader>
+        </NLayoutHeader>
+        <NLayoutContent position="absolute" style="top: 44px" has-sider>
+          <NLayoutContent>
+            <RouterView v-slot="{ Component }">
+              <keep-alive>
+                <component v-if="$route.meta.keepAlive" :is="Component" />
+              </keep-alive>
+              <component v-if="!$route.meta.keepAlive" :is="Component" />
+            </RouterView>
           </NLayoutContent>
-        </NLayout>
-      </NMessageProvider>
+        </NLayoutContent>
+      </NLayout>
     </NDialogProvider>
   </div>
 </template>
@@ -28,7 +26,11 @@ import {
   NLayoutHeader,
   NLayoutContent,
   NDialogProvider,
-  NMessageProvider,
+  useMessage
 } from 'naive-ui'
 import NavHeader from '@/components/NavHeader/index.vue'
+
+const message = useMessage()
+
+window.$message = message
 </script>
