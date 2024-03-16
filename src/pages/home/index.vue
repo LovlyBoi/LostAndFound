@@ -2,19 +2,19 @@
   <div class="max-w-[1140px] mx-auto mb-[30px]">
     <Announcement :announcements></Announcement>
     <NGrid :cols="3" :x-gap="12" :y-gap="12" class="mt-4">
-      <NGi v-for="(message, index) in messages" :key="message.id">
-        <FoundCard v-if="index % 2 === 1" :message></FoundCard>
+      <NGi v-for="message in messageStore.messages" :key="message.id">
+        <FoundCard v-if="message.type == 0" :message></FoundCard>
         <LostCard v-else :message></LostCard>
       </NGi>
     </NGrid>
     <div class="flex justify-center mt-6">
       <NButton
-        v-if="hasMore"
+        v-if="messageStore.hasMore"
         strong
         secondary
         class="bg-[#2e3338]/5"
         icon-placement="left"
-        :disabled="isLoading"
+        :disabled="messageStore.isLoading"
         @click="loadMore"
       >
         <template #icon>
@@ -40,53 +40,28 @@ import LostCard from './components/LostCard.vue'
 import Announcement, {
   type Announcement as TAnnouncement,
 } from '@/components/Announcement/index.vue'
-import { getLostAndFoundMessages } from './data'
-import { BaseMessageDTO } from '@/type'
+import { useMessageStore } from '@/store/messageStore'
+import { qryAnnouncements } from '@/api'
 
-const isLoading = ref(true)
+const messageStore = useMessageStore()
 
-const hasMore = ref(false)
+const announcements = ref<TAnnouncement[]>([])
 
-const messages = ref<BaseMessageDTO[]>([])
-
-const announcements = ref<TAnnouncement[]>([
-  {
-    title: '失物招领',
-    content: '在这里你可以发布失物招领信息',
-  },
-  {
-    title: '寻物启事',
-    content: '在这里你可以发布寻物启事信息',
-  },
-  {
-    title: '关于我们',
-    content: '在这里你可以了解我们',
-  },
-])
-
-getLostAndFoundMessages()
-  .then((res) => {
-    messages.value = res
-  })
-  .catch((err) => {
-    console.error(err)
-  })
-  .finally(() => {
-    isLoading.value = false
-  })
-
-function loadMore() {
-  isLoading.value = true
-  getLostAndFoundMessages()
+function getAnnouncements() {
+  qryAnnouncements()
     .then((res) => {
-      messages.value = [...messages.value, ...res]
+      announcements.value = res.records
     })
     .catch((err) => {
       console.error(err)
     })
-    .finally(() => {
-      isLoading.value = false
-    })
 }
+
+getAnnouncements()
+
+function loadMore() {
+  messageStore.getMessages()
+}
+
+messageStore.getMessages()
 </script>
-../../type

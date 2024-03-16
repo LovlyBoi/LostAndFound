@@ -56,6 +56,7 @@
               <div>
                 <label for="password-again" class="sr-only">Password</label>
                 <ValidateInput
+                  ref="validateInputRef"
                   v-model.trim="verifyCode"
                   :rule="verifyCodeRule"
                   trigger="blur"
@@ -118,6 +119,7 @@ const validateRef = ref<InstanceType<typeof ValidateProvider>>()
 
 const usernameInputRef = ref<ValidateInputInstance>()
 const passwordInputRef = ref<ValidateInputInstance>()
+const validateInputRef = ref<ValidateInputInstance>()
 
 const handleLogin = async () => {
   const result = await validateRef.value?.validateAll()
@@ -132,10 +134,11 @@ const handleLogin = async () => {
     router.push('/')
   } catch (error: any) {
     console.error(error)
-    if (error?.status === 403) {
-      passwordInputRef.value?.shake('密码错误')
-    } else if (error?.status === 406) {
-      usernameInputRef.value?.shake('该用户名尚未注册')
+    if (error?.response.status === 401) {
+      usernameInputRef.value?.shake('账号密码错误')
+      passwordInputRef.value?.shake('账号密码错误')
+    } else if (error?.response.status === 400) {
+      validateInputRef.value?.shake('验证码错误')
     }
   }
 }

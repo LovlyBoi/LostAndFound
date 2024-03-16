@@ -14,13 +14,9 @@ interface AnnouncementResponse {
   total: number
 }
 
-export function qryAnnouncements(from: number, to: number) {
+export function qryAnnouncements() {
   return request<AnnouncementResponse>({
     url: '/notify/list',
     method: 'GET',
-    params: {
-      from,
-      to,
-    },
   })
 }

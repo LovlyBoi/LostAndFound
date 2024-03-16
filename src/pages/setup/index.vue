@@ -117,8 +117,8 @@ const handleRegister = async () => {
     router.push('/')
   } catch (error: any) {
     console.error(error)
-    if (error === '该用户名已被占用') {
-      usernameInputRef.value?.shake(error)
+    if (error?.response.status === 400) {
+      usernameInputRef.value?.shake('注册失败')
     }
   }
 }

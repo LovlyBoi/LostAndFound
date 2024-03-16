@@ -9,6 +9,7 @@ interface Comment {
   user: {
     id: string
     admin: boolean
+    loginName: string
   }
 }
 
@@ -29,7 +30,7 @@ export function qryComments(id: string) {
 
 export function publishComment(comment: {
   content: string
-  foundMessageId: number
+  foundMessageId: string
 }) {
   return request<CommentResponse>({
     url: '/web/comments/save',

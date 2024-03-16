@@ -13,7 +13,7 @@
         {{ message?.content }}
       </main>
       <div class="flex justify-center">
-        <NImage :src="message?.photo1" />
+        <NImage v-for="url in message?.photos" :src="url" />
       </div>
       <div class="flex flex-col">
         <p
@@ -40,15 +40,16 @@
                 class="flex overflow-hidden my-2 flex-row-reverse"
               >
                 <div class="flex gap-1">
-                  <NButton round @click="isCommentReplyShow = false"
-                    >取消</NButton
-                  >
+                  <NButton round @click="isCommentReplyShow = false">
+                    取消
+                  </NButton>
                   <NButton
                     :disabled="!userComment"
                     round
                     @click="handlePublishComment"
-                    >发布</NButton
                   >
+                    发布
+                  </NButton>
                 </div>
               </section>
             </Transition>
@@ -57,7 +58,7 @@
             v-for="c in comments"
             :key="c.id"
             :name="c.name"
-            :create-time="c.time"
+            :create-time="c.createTime"
             :content="c.content"
           />
         </div>
@@ -69,21 +70,25 @@
 <script lang="ts" setup>
 import { ref } from 'vue'
 import { useRoute } from 'vue-router'
-import { NImage, NInput, NButton } from 'naive-ui'
-import { getMessageDetail } from './data'
-import { BaseMessageDTO } from '@/type'
-import { dayjs } from '@/utils/day'
+import { NImage, NInput, NButton, useMessage } from 'naive-ui'
 import Comment from '@/components/Comment/index.vue'
+import { dayjs } from '@/utils/day'
+import { qryMessageById, qryComments, publishComment } from '@/api'
+import type { MessageRecord } from '@/api/messages'
 
 const route = useRoute()
 
+const id = route.params.id as string
+
 const userComment = ref('')
 
-const message = ref<BaseMessageDTO>()
+const m = useMessage()
+
+const message = ref<MessageRecord>()
 
 const isCommentReplyShow = ref(false)
 
-getMessageDetail(route.params.id as string)
+qryMessageById(id)
   .then((res) => {
     console.log(res)
     message.value = res
@@ -94,28 +99,41 @@ getMessageDetail(route.params.id as string)
 
 function handlePublishComment() {
   console.log(userComment.value)
-  isCommentReplyShow.value = false
+  publishComment({ content: userComment.value, foundMessageId: id })
+    .then((res) => {
+      if ((res as any).code !== 200) {
+        m.error('评论失败')
+        return
+      }
+      userComment.value = ''
+      isCommentReplyShow.value = false
+      getComments()
+    })
+    .catch((err) => {
+      console.error(err)
+    })
 }
 
-const comments = [
+const comments = ref<
   {
-    id: 1,
-    name: '王二狗',
-    time: '2023-04-12 12:30:00',
-    content: '这是一条评论',
-  },
-  {
-    id: 2,
-    name: '王二狗',
-    time: '2023-04-12 12:30:00',
-    content:
-      '这是一条评论 这是一条评论 这是一条评论 这是一条评论 这是一条评论 这是一条评论 这是一条评论 这是一条评论 这是一条评论 这是一条评论 这是一条评论 这是一条评论 这是一条评论 这是一条评论',
-  },
-  {
-    id: 3,
-    name: '王二狗',
-    time: '2023-04-12 12:30:00',
-    content: '这是一条评论',
-  },
-]
+    id: string
+    name: string
+    createTime: string
+    content: string
+  }[]
+>([])
+
+function getComments() {
+  qryComments(id).then((res) => {
+    console.log(res)
+    comments.value = res.records.map((r) => ({
+      id: r.id,
+      name: r.user.loginName,
+      createTime: r.createTime,
+      content: r.content,
+    }))
+  })
+}
+
+getComments()
 </script>

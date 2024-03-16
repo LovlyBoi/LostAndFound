@@ -4,8 +4,10 @@
       <NAvatar
         round
         size="medium"
-        src="https://07akioni.oss-cn-beijing.aliyuncs.com/07akioni.jpeg"
-      />
+        fallback-src="https://07akioni.oss-cn-beijing.aliyuncs.com/07akioni.jpeg"
+      >
+      {{ name?.[0] || '' }}
+      </NAvatar>
     </div>
     <div class="flex flex-col max-w-[600px]">
       <p class="text-gray-500 text-sm mb-[4px]">
@@ -28,4 +30,4 @@ defineProps<{
   createTime: string
   content: string
 }>()
-</script>../../utils/day
+</script>

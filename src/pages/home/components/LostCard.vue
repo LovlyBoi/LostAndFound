@@ -9,7 +9,7 @@
         <div class="mt-2 max-h-[200px] overflow-hidden">
           <img
             class="max-h-full max-w-full hover:scale-110 transition-all"
-            :src="props.message.photo1"
+            :src="props.message.photos[0]"
           />
         </div>
       </div>
@@ -20,10 +20,10 @@
 <script lang="ts" setup>
 import { useRouter } from 'vue-router'
 import BaseCard from './BaseCard.vue'
-import { BaseMessageDTO } from '@/type'
+import type { MessageRecord } from '@/api/messages'
 
 const props = defineProps<{
-  message: BaseMessageDTO
+  message: MessageRecord
 }>()
 
 const router = useRouter()
@@ -32,4 +32,4 @@ function handleClick() {
   // 跳转到详情页
   router.push(`/detail/${props.message.id}`)
 }
-</script>../../../type
+</script>

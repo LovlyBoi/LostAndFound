@@ -1,8 +1,17 @@
 import { request } from '@/utils/request'
 
-interface LoginResponse {
-  token: string
+interface LoginResult {
   username: string
+  token: string
+}
+
+interface LoginResponse {
+  msg: string
+  code: number
+  data: {
+    token: string
+  }
+  success: boolean
 }
 
 interface VerifyCodeResponse {
@@ -15,7 +24,7 @@ export async function login(
   password: string,
   verifyCode: string,
   verifyCodeId: string,
-): Promise<LoginResponse> {
+): Promise<LoginResult> {
   const res = await request<{ token: string }>({
     url: '/api/sys/login',
     method: 'POST',
@@ -32,14 +41,17 @@ export async function login(
   }
 }
 
-export async function register(username: string, password: string) {
+export async function register(
+  username: string,
+  password: string,
+): Promise<LoginResult> {
   const res = await request<LoginResponse>({
     url: '/sys/user/saveNormal',
     method: 'POST',
     data: { loginName: username, password },
   })
   return {
-    ...res,
+    token: res?.data?.token,
     username,
   }
 }

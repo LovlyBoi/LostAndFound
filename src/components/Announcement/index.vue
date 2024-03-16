@@ -15,7 +15,7 @@
       </div>
       <div
         class="announcement-item w-full text-red-500 h-[30px] leading-[30px]"
-        v-if="announcements.length > 1"
+        v-if="announcements.length"
         :data-index="1"
         :data-count="announcements.length"
       >

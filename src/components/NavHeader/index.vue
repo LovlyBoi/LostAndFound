@@ -10,8 +10,7 @@
         </h2>
       </RouterLink>
       <div
-        class="flex items-center justify-center transition-all"
-        :class="[isFocused ? 'w-[240px]' : 'w-[88px]']"
+        class="flex items-center justify-center"
       >
         <div v-if="!isLogin" class="flex">
           <RouterLink to="/login" class="w-12 underline px-2 tracking-wide">
@@ -29,7 +28,23 @@
             发布信息
           </RouterLink>
         </div>
-        <div class="group">
+        <div v-if="isLogin && $route.fullPath !== '/thanksWall'">
+          <RouterLink
+            to="/thanksWall"
+            class="w-24 underline px-2 tracking-wide block"
+          >
+            感谢墙
+          </RouterLink>
+        </div>
+        <div v-if="isLogin">
+          <span
+            class="w-24 underline px-2 tracking-wide block cursor-pointer"
+            @click="userStore.logout"
+          >
+            登出
+          </span>
+        </div>
+        <div class="group transition-all" :class="[isFocused ? 'w-[240px]' : 'w-[88px]']">
           <NInput
             v-if="isHome"
             ref="inputRef"
@@ -65,12 +80,14 @@ import { useRoute } from 'vue-router'
 import { NIcon, NInput } from 'naive-ui'
 import { Earth, SearchOutline } from '@vicons/ionicons5'
 import { useUserStore } from '@/store/userStore'
+import { useMessageStore } from '@/store/messageStore'
 
 const route = useRoute()
 
 const isHome = computed(() => route.path === '/')
 
 const userStore = useUserStore()
+const messageStore = useMessageStore()
 
 const isLogin = computed(() => !!userStore.token)
 
@@ -81,7 +98,7 @@ const sreachInfo = ref('')
 const inputRef = ref<InstanceType<typeof NInput> | null>(null)
 
 function handleSearch() {
-  console.log(sreachInfo.value)
   inputRef.value?.blur()
+  messageStore.searchMessage(sreachInfo.value)
 }
 </script>

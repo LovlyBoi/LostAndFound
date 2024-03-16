@@ -3,7 +3,7 @@ import type { RouteRecordRaw } from 'vue-router'
 
 import Home from '@/pages/home/index.vue'
 import Detail from '@/pages/detail/index.vue'
-import TanksWall from '@/pages/tanksWall/index.vue'
+import ThanksWall from '@/pages/thanksWall/index.vue'
 import PublishLost from '@/pages/publishLost/index.vue'
 import PublishFound from '@/pages/publishFound/index.vue'
 import Login from '@/pages/login/index.vue'
@@ -27,8 +27,8 @@ const routes: RouteRecordRaw[] = [
     component: PublishFound,
   },
   {
-    path: '/tanksWall',
-    component: TanksWall,
+    path: '/thanksWall',
+    component: ThanksWall,
   },
   {
     path: '/setup',

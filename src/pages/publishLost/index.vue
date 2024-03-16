@@ -1,10 +1,6 @@
 <template>
   <div class="container w-3/5 min-h-full m-auto">
-    <NSteps
-      class="pt-10 ml-16"
-      :current="currentRef as number"
-      :status="currentStatus"
-    >
+    <NSteps class="pt-10 ml-16" :current="currentRef!" :status="currentStatus">
       <NStep title="选择需求类型" description="Lost or Found" />
       <NStep title="填写基本信息" description="Basic Message" />
       <NStep title="预览发布信息" description="Preview the Message" />
@@ -64,17 +60,21 @@ import {
   useMessage,
 } from 'naive-ui'
 import { ref } from 'vue'
+import { useRouter } from 'vue-router'
 import SeekIcon from '@/pages/publishLost/icons/SeekIcon.vue'
 import FoundIcon from '@/pages/publishLost/icons/FoundIcon.vue'
 import { ModelType } from './type'
 import BasicMessage from './components/BasicMessage.vue'
 import Preview from './components/Preview.vue'
+import { publishMessage } from '@/api'
 
-const type = ref<string | null>(null)
+const type = ref<'0' | '1'>('0')
 const currentRef = ref<number | null>(1)
 const currentStatus = ref<StepsProps['status']>('process')
 const message = useMessage()
 const basicInfoRef = ref()
+
+const router = useRouter()
 
 const modelRef = ref<ModelType>({
   title: null,
@@ -96,7 +96,6 @@ const next = () => {
     } else currentRef.value++
   }
   if (currentRef.value === 2) {
-    console.log(modelRef.value, '++')
     basicInfoRef.value?.formRef?.validate((errors: any) => {
       if (!errors && currentRef.value) {
         currentRef.value++
@@ -114,7 +113,19 @@ const prev = () => {
 
 const submit = () => {
   console.log({ type: type.value, data: modelRef.value })
-  message.success('提交成功')
+  publishMessage({
+    type: type.value,
+    title: modelRef.value.title || '',
+    content: modelRef.value.content || '',
+    contactName: modelRef.value.contactName || '',
+    contactPhone: modelRef.value.contactPhone || '',
+    photos: modelRef.value.photos || [],
+  }).then(({ code }) => {
+    if (code === 200) {
+      message.success('提交成功')
+      router.push('/')
+    }
+  })
 }
 </script>
 

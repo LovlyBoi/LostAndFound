@@ -95,9 +95,9 @@ const rules = {
     trigger: ['input'],
     validator: (rule: FormItemRule, value: string) => {
       if (!value) return Error('请输入联系人姓名')
-      const pattern = /^([A-Za-z0-9_\u4e00-\u9fa5]{4,16})/
+      const pattern = /^([A-Za-z0-9_\u4e00-\u9fa5]{2,16})/
       if (!pattern.test(value)) {
-        return Error('用户名格式错误(4~16位字母、汉字、数字、下划线)')
+        return Error('用户名格式错误(2~16位字母、汉字、数字、下划线)')
       }
       return true
     },
